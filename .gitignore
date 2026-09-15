@@ -15,6 +15,7 @@ dist-ssr
 # Environment variables
 .env
 .env.*
+!.env.example
 
 # Uploads
 uploads/
@@ -31,16 +32,16 @@ uploads/
 *.sw?
 .vercel
 
-.vercel
-.env*
 .pem
 .key
 .cert
 *.sql
+!supabase/migrations/*.sql
 *.dump
 *.sqlite
 *.sqlite3
 *.db
+supabase/.temp/
 
 # Binary tools (download via CI/CD, don't commit)
 gitleaks.exe

@@ -1,21 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { API_BASE } from '../services/api';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { User as ApiUser } from '../services/api';
 
 export type UserRole = 'Distributor' | 'Retailer' | 'Driver' | 'Admin';
 export type AppTheme = 'dark' | 'light';
 export type AppLanguage = 'EN' | 'IND';
 export type AppCurrency = 'USD' | 'IDR';
 
-interface User {
-  id: number;
-  email: string;
-  role: UserRole;
-  full_name: string;
-  avatar_url?: string | null;
-}
-
 interface AuthContextType {
-  user: User | null;
+  user: ApiUser | null;
   role: UserRole | null;
   loading: boolean;
   theme: AppTheme;
@@ -28,9 +21,8 @@ interface AuthContextType {
   setCurrency: (curr: AppCurrency) => void;
   setProfileName: (name: string) => void;
   loginDemo: (role: UserRole) => void;
-  loginReal: (userObj: User, role: UserRole) => void;
-  loginWithToken: (token: string, user: User) => void;
-  signOut: () => void;
+  loginReal: (userObj: ApiUser, role: UserRole) => void;
+  signOut: () => Promise<void>;
   hasPermission: (permission: string) => boolean;
   canAccessPage: (page: string) => boolean;
 }
@@ -42,7 +34,7 @@ const AuthContext = createContext<AuthContextType>({
   theme: 'dark',
   language: 'EN',
   currency: 'IDR',
-  profileName: 'Alex Morgan',
+  profileName: 'User',
   setRole: () => {},
   setTheme: () => {},
   setLanguage: () => {},
@@ -50,8 +42,7 @@ const AuthContext = createContext<AuthContextType>({
   setProfileName: () => {},
   loginDemo: () => {},
   loginReal: () => {},
-  loginWithToken: () => {},
-  signOut: () => {},
+  signOut: async () => {},
   hasPermission: () => false,
   canAccessPage: () => false,
 });
@@ -86,7 +77,7 @@ const canAccessPage = (userRole: UserRole | null, page: string): boolean => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<ApiUser | null>(null);
   const [role, setRoleState] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -96,53 +87,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [currency, setCurrencyState] = useState<AppCurrency>('IDR');
   const [profileName, setProfileNameState] = useState('User');
 
-  const fetchUserFromToken = async (token: string) => {
-    const res = await fetch(`${API_BASE}/api/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (res.ok) {
-      const userData = await res.json();
-      const userObj: User = {
-        id: userData.id,
-        email: userData.email,
-        role: userData.role,
-        full_name: userData.full_name,
-        avatar_url: userData.avatar_url
-      };
-      setUser(userObj);
-      localStorage.setItem('user_session', JSON.stringify(userObj));
-      setRoleState(userObj.role);
-      localStorage.setItem('user_role', userObj.role);
-    } else {
-      throw new Error('Invalid token');
+  const fetchUserProfile = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single();
+    
+    if (!error && data) {
+      setUser(data as ApiUser);
+      setRoleState(data.role as UserRole);
+      setProfileNameState(data.full_name);
     }
   };
 
   useEffect(() => {
-    // Load session and settings from localStorage
-    const savedUser = localStorage.getItem('user_session');
-    if (savedUser) {
-      try {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setUser(JSON.parse(savedUser));
-      } catch {
-        localStorage.removeItem('user_session');
-      }
-    }
-
-    const savedRole = localStorage.getItem('user_role') as UserRole | null;
+    // Check local demo session
+    const savedRole = localStorage.getItem('demo_user_role') as UserRole | null;
+    const savedName = localStorage.getItem('demo_user_name');
     if (savedRole) {
       setRoleState(savedRole);
+      setProfileNameState(savedName || `${savedRole} Demo`);
+      setUser({
+        id: 'demo-user-id',
+        email: `${savedRole.toLowerCase()}@orderlink.io`,
+        role: savedRole,
+        full_name: savedName || `${savedRole} Demo`
+      });
     }
 
-    const savedToken = localStorage.getItem('auth_token');
-    if (savedToken && !savedUser) {
-      // Try to restore session from token
-      fetchUserFromToken(savedToken).catch(() => {
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user_session');
-        localStorage.removeItem('user_role');
+    let unsubscribe = () => {};
+
+    if (isSupabaseConfigured) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user) {
+          fetchUserProfile(session.user.id).finally(() => setLoading(false));
+        } else {
+          setLoading(false);
+        }
+      }).catch(() => {
+        setLoading(false);
       });
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (session?.user) {
+          fetchUserProfile(session.user.id);
+        } else if (!localStorage.getItem('demo_user_role')) {
+          setUser(null);
+          setRoleState(null);
+        }
+      });
+      unsubscribe = () => subscription.unsubscribe();
+    } else {
+      setLoading(false);
     }
 
     const savedTheme = localStorage.getItem('app_theme') as AppTheme | null;
@@ -159,16 +156,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedCurr = localStorage.getItem('app_curr') as AppCurrency | null;
     if (savedCurr) setCurrencyState(savedCurr);
 
-    const savedName = localStorage.getItem('profile_name');
-    if (savedName) setProfileNameState(savedName);
-
-    setLoading(false);
+    return () => unsubscribe();
   }, []);
 
 
   const setRole = (newRole: UserRole) => {
     setRoleState(newRole);
-    localStorage.setItem('user_role', newRole);
+    // Ideally this would be updated in the backend, but we just set local state here for UI mocking if needed
   };
 
   const setTheme = (newTheme: AppTheme) => {
@@ -193,43 +187,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const setProfileName = (newName: string) => {
     setProfileNameState(newName);
-    localStorage.setItem('profile_name', newName);
+    // Normally we'd want to persist this to Supabase profile
   };
 
   const loginDemo = (selectedRole: UserRole) => {
-    const demoUser: User = { id: 0, email: 'demo@example.com', role: selectedRole, full_name: 'Demo User' };
-    // Demo token — NOT a real JWT, just a placeholder for local UI testing.
-    // No secrets are embedded. Backend will reject this token in production.
-    const demoToken = `demo-token-${selectedRole.toLowerCase()}-${Date.now()}`;
-    
+    const demoUser: ApiUser = {
+      id: 'demo-user-id',
+      email: `${selectedRole.toLowerCase()}@orderlink.io`,
+      role: selectedRole,
+      full_name: `${selectedRole} Demo`
+    };
     setUser(demoUser);
     setRoleState(selectedRole);
-    localStorage.setItem('user_session', JSON.stringify(demoUser));
-    localStorage.setItem('user_role', selectedRole);
-    localStorage.setItem('auth_token', demoToken);
+    setProfileNameState(`${selectedRole} Demo`);
+    localStorage.setItem('demo_user_role', selectedRole);
+    localStorage.setItem('demo_user_name', `${selectedRole} Demo`);
   };
 
-  const loginReal = (userObj: User, selectedRole: UserRole) => {
+  const loginReal = (userObj: ApiUser, selectedRole: UserRole) => {
     setUser(userObj);
     setRoleState(selectedRole);
-    localStorage.setItem('user_session', JSON.stringify(userObj));
-    localStorage.setItem('user_role', selectedRole);
   };
 
-  const loginWithToken = (token: string, userObj: User) => {
-    localStorage.setItem('auth_token', token);
-    setUser(userObj);
-    setRoleState(userObj.role);
-    localStorage.setItem('user_session', JSON.stringify(userObj));
-    localStorage.setItem('user_role', userObj.role);
-  };
-
-  const signOut = () => {
+  const signOut = async () => {
+    localStorage.removeItem('demo_user_role');
+    localStorage.removeItem('demo_user_name');
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.auth.signOut();
+      } catch {
+        // ignore
+      }
+    }
     setUser(null);
     setRoleState(null);
-    localStorage.removeItem('user_session');
-    localStorage.removeItem('user_role');
-    localStorage.removeItem('auth_token');
   };
 
   return (
@@ -249,7 +240,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setProfileName,
         loginDemo,
         loginReal,
-        loginWithToken,
         signOut,
         hasPermission: (permission: string) => hasPermission(role, permission),
         canAccessPage: (page: string) => canAccessPage(role, page),

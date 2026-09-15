@@ -1,7 +1,4 @@
-# Load development credentials from .env.docker (gitignored)
-# Create .env.docker from .env.docker.example before first run
 services:
-  # Frontend - React + Vite
   frontend:
     build:
       context: .
@@ -12,53 +9,5 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - VITE_API_BASE=http://localhost:3001
-    depends_on:
-      - backend
+      - VITE_API_BASE=http://localhost:54321
     command: npm run dev -- --host 0.0.0.0
-
-  # Backend API - Node.js + Express + MySQL
-  backend:
-    build:
-      context: ../orderlink-backend
-      dockerfile: Dockerfile.backend
-    volumes:
-      - ../orderlink-backend:/app
-      - /app/node_modules
-    ports:
-      - "3001:3001"
-    env_file:
-      - .env.docker
-    environment:
-      - NODE_ENV=development
-      - PORT=3001
-      - DB_HOST=db
-      - DB_PORT=3306
-      - CORS_ORIGIN=http://localhost:5173
-    depends_on:
-      db:
-        condition: service_healthy
-
-  # MySQL Database
-  db:
-    image: mysql:8.0
-    restart: unless-stopped
-    env_file:
-      - .env.docker
-    environment:
-      # These variables will automatically be picked up from .env.docker by MySQL init scripts
-      # MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD
-      - TZ=Asia/Jakarta
-    volumes:
-      - db-data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-volumes:
-  db-data:

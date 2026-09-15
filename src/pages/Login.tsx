@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth, UserRole } from '../contexts/AuthContext';
-import { API_BASE } from '../services/api';
-import { signInWithGoogle, setupGooglePopupListener, handleGoogleRedirect } from '../lib/googleAuth';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { Mail, Lock, Shield, Store, Truck, ShoppingBag, Eye, EyeOff, User, ArrowRight, ArrowLeft } from 'lucide-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const Login: React.FC = () => {
-  const { loginWithToken } = useAuth();
+  const { loginDemo } = useAuth();
   const [isRegisterMode, setIsRegisterMode] = useState(false);
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   // Form Inputs
@@ -24,68 +22,38 @@ export const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // Handle Google OAuth redirect on mount
-  useEffect(() => {
-    const code = searchParams.get('code');
-    
-    if (code) {
-      // Clean up URL
-      window.history.replaceState({}, '', window.location.pathname);
-      
-      // Handle the auth code
-      handleGoogleRedirect(code)
-        .then(data => {
-          if (data.token && data.user) {
-            loginWithToken(data.token, data.user);
-            navigate('/');
-          }
-        })
-        .catch(err => {
-          setError('Google sign-in failed: ' + err.message);
-        });
-    }
-  }, [searchParams, loginWithToken, navigate]);
-
-  // Setup popup listener
-  useEffect(() => {
-    return setupGooglePopupListener(
-      (data) => {
-        if (data.token && data.user) {
-          loginWithToken(data.token, data.user);
-          navigate('/');
-        }
-      },
-      (err) => {
-        setError('Google sign-in failed: ' + err.message);
-        setIsLoading(false);
-      }
-    );
-  }, [loginWithToken, navigate]);
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
     setSuccess(null);
 
+    // Fast-path for demo password or when Supabase is not yet configured
+    if (!isSupabaseConfigured || password === 'demo123') {
+      loginDemo(selectedRole);
+      navigate('/');
+      return;
+    }
+
     try {
-      const res = await fetch(`${API_BASE}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Invalid credentials');
+      if (authError) {
+        throw authError;
       }
 
-      if (data.token && data.user) {
-        loginWithToken(data.token, data.user);
+      if (data.session) {
         navigate('/');
       }
     } catch (err: unknown) {
+      if (password === 'demo123') {
+        loginDemo(selectedRole);
+        navigate('/');
+        return;
+      }
       setError((err as Error).message || 'Invalid credentials. Please try again.');
     } finally {
       setIsLoading(false);
@@ -104,22 +72,33 @@ export const Login: React.FC = () => {
       return;
     }
 
+    if (!isSupabaseConfigured) {
+      setError('Supabase belum terhubung. Konfigurasikan VITE_SUPABASE_URL & VITE_SUPABASE_ANON_KEY di .env atau gunakan Login Demo.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const res = await fetch(`${API_BASE}/api/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, full_name: fullName, role: selectedRole })
+      const { data, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            role: selectedRole,
+          },
+        },
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Registration failed');
+      if (authError) {
+        throw authError;
       }
 
-      if (data.token && data.user) {
-        loginWithToken(data.token, data.user);
+      if (data.session) {
         navigate('/');
+      } else {
+        setSuccess('Registration successful! Please check your email for confirmation or sign in.');
+        setIsRegisterMode(false);
       }
     } catch (err: unknown) {
       setError((err as Error).message || 'Registration failed. Please try again.');
@@ -128,15 +107,28 @@ export const Login: React.FC = () => {
     }
   };
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      // Use popup flow - the listener will handle the response
-      signInWithGoogle('OrderLink');
-    } catch {
-      setError('Google Sign-In failed');
+      const { error: authError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+      if (authError) throw authError;
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Google Sign-In failed');
       setIsLoading(false);
     }
+  };
+
+  const handleDemoSelect = (role: UserRole, demoEmail: string) => {
+    setSelectedRole(role);
+    setEmail(demoEmail);
+    setPassword('demo123');
+    loginDemo(role);
+    navigate('/');
   };
 
   // 1. INFORMATIONAL PANEL COLUMN (Welcome / Register info)
@@ -246,7 +238,7 @@ export const Login: React.FC = () => {
           <div className="grid grid-cols-2 gap-1.5 text-[10px]">
             <button
               type="button"
-              onClick={() => { setSelectedRole('Distributor'); setEmail('distributor@orderlink.io'); setPassword('demo123'); }}
+              onClick={() => handleDemoSelect('Distributor', 'distributor@orderlink.io')}
               className="text-left p-1.5 rounded-lg bg-[#1a2023] hover:bg-[#232a2e] border border-[#283236] transition-all cursor-pointer"
             >
               <div className="font-semibold text-slate-200">Distributor</div>
@@ -254,7 +246,7 @@ export const Login: React.FC = () => {
             </button>
             <button
               type="button"
-              onClick={() => { setSelectedRole('Retailer'); setEmail('retailer@orderlink.io'); setPassword('demo123'); }}
+              onClick={() => handleDemoSelect('Retailer', 'retailer@orderlink.io')}
               className="text-left p-1.5 rounded-lg bg-[#1a2023] hover:bg-[#232a2e] border border-[#283236] transition-all cursor-pointer"
             >
               <div className="font-semibold text-slate-200">Retailer</div>
@@ -262,7 +254,7 @@ export const Login: React.FC = () => {
             </button>
             <button
               type="button"
-              onClick={() => { setSelectedRole('Driver'); setEmail('driver@orderlink.io'); setPassword('demo123'); }}
+              onClick={() => handleDemoSelect('Driver', 'driver@orderlink.io')}
               className="text-left p-1.5 rounded-lg bg-[#1a2023] hover:bg-[#232a2e] border border-[#283236] transition-all cursor-pointer"
             >
               <div className="font-semibold text-slate-200">Driver</div>
@@ -270,7 +262,7 @@ export const Login: React.FC = () => {
             </button>
             <button
               type="button"
-              onClick={() => { setSelectedRole('Admin'); setEmail('admin@orderlink.io'); setPassword('demo123'); }}
+              onClick={() => handleDemoSelect('Admin', 'admin@orderlink.io')}
               className="text-left p-1.5 rounded-lg bg-[#1a2023] hover:bg-[#232a2e] border border-[#283236] transition-all cursor-pointer"
             >
               <div className="font-semibold text-slate-200">Admin</div>
