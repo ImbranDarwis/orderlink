@@ -33,7 +33,7 @@
   <img src="https://img.shields.io/github/last-commit/ImbranDarwis/orderlink?style=flat-square&color=blue" alt="Last Commit" />
   <img src="https://img.shields.io/github/languages/top/ImbranDarwis/orderlink?style=flat-square&color=blue" alt="Top Language" />
   <img src="https://img.shields.io/github/repo-size/ImbranDarwis/orderlink?style=flat-square&color=blue" alt="Repo Size" />
-  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="License" />
+  <img src="https://img.shields.io/badge/license-All%20Rights%20Reserved-red?style=flat-square" alt="License" />
 </p>
 
 ---
@@ -223,9 +223,11 @@ orderlink/
 
 ---
 
-## 📄 License
+## 📄 License & Hak Cipta
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Copyright © 2026 Imbran Darwis. **All Rights Reserved.**
+
+Seluruh kode, aset desain, dan dokumentasi dalam repositori ini adalah milik eksklusif Imbran Darwis. Dilarang menyalin, mendistribusikan, memodifikasi, atau menggunakan kembali sebagian maupun seluruh isi proyek ini untuk keperluan komersial maupun non-komersial tanpa izin tertulis eksplisit dari pemilik hak cipta.
 
 ---
 
