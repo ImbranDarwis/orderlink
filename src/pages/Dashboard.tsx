@@ -832,7 +832,7 @@ export const Dashboard: React.FC = () => {
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
                   <Search className="w-4 h-4" />
                 </span>
-                <input id="field_1" name="field_1"
+                <input aria-label="Field 1" id="field_1" name="field_1"
                   type="text"
                   placeholder="Filter by customer/ID..."
                   value={orderSearch}
@@ -960,7 +960,7 @@ export const Dashboard: React.FC = () => {
               <p className={`text-[11px] mt-1 ${themeTextMuted}`}>{t.trackStock}</p>
             </div>
             <div className="flex items-center gap-3">
-              <input id="field_2" name="field_2"
+              <input aria-label="Field 2" id="field_2" name="field_2"
                 type="text"
                 placeholder={t.searchStock}
                 value={invSearch}
@@ -1113,7 +1113,7 @@ export const Dashboard: React.FC = () => {
               <p className={`text-[11px] mt-1 ${themeTextMuted}`}>{t.manageClients}</p>
             </div>
             <div className="flex items-center gap-3">
-              <input id="field_3" name="field_3"
+              <input aria-label="Field 3" id="field_3" name="field_3"
                 type="text"
                 placeholder={t.searchCustomers}
                 value={custSearch}
@@ -1391,7 +1391,7 @@ export const Dashboard: React.FC = () => {
               </h3>
               <div>
                 <label className={`block text-[10px] font-bold uppercase mb-1 ${themeTextMuted}`}>{t.displayName}</label>
-                <input id="field_4" name="field_4"
+                <input aria-label="Field 4" id="field_4" name="field_4"
                   type="text"
                   required
                   value={tempProfileName}
@@ -1401,7 +1401,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div>
                 <label className={`block text-[10px] font-bold uppercase mb-1 ${themeTextMuted}`}>{language === 'EN' ? 'Profile Picture URL (Image Link)' : 'URL Foto Profil (Link Gambar)'}</label>
-                <input id="field_avatar" name="field_avatar"
+                <input aria-label="Field Avatar" id="field_avatar" name="field_avatar"
                   type="url"
                   placeholder="https://example.com/photo.jpg"
                   value={profileAvatarUrl}
@@ -1411,7 +1411,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div>
                 <label className={`block text-[10px] font-bold uppercase mb-1 ${themeTextMuted}`}>{t.emailAddress}</label>
-                <input id="field_5" name="field_5"
+                <input aria-label="Field 5" id="field_5" name="field_5"
                   type="email"
                   required
                   value={profileEmail}
@@ -1421,7 +1421,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div>
                 <label className={`block text-[10px] font-bold uppercase mb-1.5 ${themeTextMuted}`}>{t.portalRole}</label>
-                <select id="field_6" name="field_6"
+                <select aria-label="Field 6" id="field_6" name="field_6"
                   value={profileRole}
                   onChange={(e) => setProfileRole(e.target.value as UserRole)}
                   className={`w-full text-slate-200 focus:outline-none focus:border-[#10b981] px-3.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${themeSelect}`}
@@ -1442,7 +1442,7 @@ export const Dashboard: React.FC = () => {
               {/* Language Switcher */}
               <div>
                 <label className={`block text-[10px] font-bold uppercase mb-1.5 ${themeTextMuted}`}>{t.language}</label>
-                <select id="field_7" name="field_7"
+                <select aria-label="Field 7" id="field_7" name="field_7"
                   value={language}
                   onChange={(e) => setLanguage(e.target.value as AppLanguage)}
                   className={`w-full text-slate-200 focus:outline-none focus:border-[#10b981] px-3.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${themeSelect}`}
@@ -1455,7 +1455,7 @@ export const Dashboard: React.FC = () => {
               {/* Currency Switcher */}
               <div>
                 <label className={`block text-[10px] font-bold uppercase mb-1.5 ${themeTextMuted}`}>{t.currency}</label>
-                <select id="field_8" name="field_8"
+                <select aria-label="Field 8" id="field_8" name="field_8"
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value as AppCurrency)}
                   className={`w-full text-slate-200 focus:outline-none focus:border-[#10b981] px-3.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${themeSelect}`}
@@ -1467,7 +1467,7 @@ export const Dashboard: React.FC = () => {
 
               <div>
                 <label className={`block text-[10px] font-bold uppercase mb-1 ${themeTextMuted}`}>{t.companyName}</label>
-                <input id="field_9" name="field_9"
+                <input aria-label="Field 9" id="field_9" name="field_9"
                   type="text"
                   required
                   value={profileCompany}
@@ -1635,7 +1635,7 @@ export const Dashboard: React.FC = () => {
             <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
               <Search className="w-4 h-4" />
             </span>
-            <input id="field_10" name="field_10"
+            <input aria-label="Field 10" id="field_10" name="field_10"
               type="text"
               placeholder={t.searchGlobal}
               className={`text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#10b981] pl-9 pr-4 py-1.5 rounded-lg text-xs w-72 transition-all ${themeInput}`}
@@ -1857,7 +1857,7 @@ export const Dashboard: React.FC = () => {
             <form onSubmit={handleAddInventory} className="space-y-4">
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.skuCode}</label>
-                <input id="field_11" name="field_11"
+                <input aria-label="Field 11" id="field_11" name="field_11"
                   type="text"
                   required
                   placeholder="e.g. SKU-9104"
@@ -1868,7 +1868,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.productName}</label>
-                <input id="field_12" name="field_12"
+                <input aria-label="Field 12" id="field_12" name="field_12"
                   type="text"
                   required
                   placeholder="e.g. Heavy Duty Pallet"
@@ -1880,7 +1880,7 @@ export const Dashboard: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.category}</label>
-                  <select id="field_13" name="field_13"
+                  <select aria-label="Field 13" id="field_13" name="field_13"
                     value={newInv.category}
                     onChange={(e) => setNewInv({ ...newInv, category: e.target.value })}
                     className="w-full bg-[#121618] border border-[#1e2427] text-slate-200 focus:outline-none px-3 py-2 rounded-xl text-xs"
@@ -1893,7 +1893,7 @@ export const Dashboard: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.status}</label>
-                  <select id="field_14" name="field_14"
+                  <select aria-label="Field 14" id="field_14" name="field_14"
                     value={newInv.status}
                     onChange={(e) => setNewInv({ ...newInv, status: e.target.value as InventoryItem['status'] })}
                     className="w-full bg-[#121618] border border-[#1e2427] text-slate-200 focus:outline-none px-3 py-2 rounded-xl text-xs"
@@ -1907,7 +1907,7 @@ export const Dashboard: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.stockQuantity}</label>
-                  <input id="field_15" name="field_15"
+                  <input aria-label="Field 15" id="field_15" name="field_15"
                     type="number"
                     required
                     value={newInv.stock}
@@ -1917,7 +1917,7 @@ export const Dashboard: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.unitPrice} ({currency === 'USD' ? '$' : 'Rp'})</label>
-                  <input id="field_16" name="field_16"
+                  <input aria-label="Field 16" id="field_16" name="field_16"
                     type="number"
                     step="0.01"
                     required
@@ -1958,7 +1958,7 @@ export const Dashboard: React.FC = () => {
             <form onSubmit={handleAddCustomer} className="space-y-4">
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.clientFullName}</label>
-                <input id="field_17" name="field_17"
+                <input aria-label="Field 17" id="field_17" name="field_17"
                   type="text"
                   required
                   placeholder="e.g. Liam Wright"
@@ -1969,7 +1969,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.companyEntity}</label>
-                <input id="field_18" name="field_18"
+                <input aria-label="Field 18" id="field_18" name="field_18"
                   type="text"
                   required
                   placeholder="e.g. Acme Corp"
@@ -1981,7 +1981,7 @@ export const Dashboard: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.emailAddress}</label>
-                  <input id="field_19" name="field_19"
+                  <input aria-label="Field 19" id="field_19" name="field_19"
                     type="email"
                     required
                     placeholder="e.g. name@acme.com"
@@ -1992,7 +1992,7 @@ export const Dashboard: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.phone}</label>
-                  <input id="field_20" name="field_20"
+                  <input aria-label="Field 20" id="field_20" name="field_20"
                     type="text"
                     required
                     placeholder="e.g. +1 (555) 019-2831"
@@ -2005,7 +2005,7 @@ export const Dashboard: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.totalOrders}</label>
-                  <input id="field_21" name="field_21"
+                  <input aria-label="Field 21" id="field_21" name="field_21"
                     type="number"
                     value={newCust.total_orders}
                     onChange={(e) => setNewCust({ ...newCust, total_orders: parseInt(e.target.value) })}
@@ -2014,7 +2014,7 @@ export const Dashboard: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.totalSpent} ({currency === 'USD' ? '$' : 'Rp'})</label>
-                  <input id="field_22" name="field_22"
+                  <input aria-label="Field 22" id="field_22" name="field_22"
                     type="number"
                     step="0.01"
                     value={newCust.total_spent}
@@ -2025,7 +2025,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.accountStatus}</label>
-                <select id="field_23" name="field_23"
+                <select aria-label="Field 23" id="field_23" name="field_23"
                   value={newCust.status}
                   onChange={(e) => setNewCust({ ...newCust, status: e.target.value as Customer['status'] })}
                   className="w-full bg-[#121618] border border-[#1e2427] text-slate-200 focus:outline-none px-3 py-2 rounded-xl text-xs"
@@ -2065,7 +2065,7 @@ export const Dashboard: React.FC = () => {
             <form onSubmit={handleUpdateInventory} className="space-y-4">
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.skuCode}</label>
-                <input id="field_24" name="field_24"
+                <input aria-label="Field 24" id="field_24" name="field_24"
                   type="text"
                   readOnly
                   value={editInv.sku}
@@ -2074,7 +2074,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.productName}</label>
-                <input id="field_25" name="field_25"
+                <input aria-label="Field 25" id="field_25" name="field_25"
                   type="text"
                   required
                   value={editInv.name}
@@ -2085,7 +2085,7 @@ export const Dashboard: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.category}</label>
-                  <select id="field_26" name="field_26"
+                  <select aria-label="Field 26" id="field_26" name="field_26"
                     value={editInv.category}
                     onChange={(e) => setEditInv({ ...editInv, category: e.target.value })}
                     className="w-full bg-[#121618] border border-[#1e2427] text-slate-200 focus:outline-none px-3 py-2 rounded-xl text-xs"
@@ -2098,7 +2098,7 @@ export const Dashboard: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.status}</label>
-                  <select id="field_27" name="field_27"
+                  <select aria-label="Field 27" id="field_27" name="field_27"
                     value={editInv.status}
                     onChange={(e) => setEditInv({ ...editInv, status: e.target.value as InventoryItem['status'] })}
                     className="w-full bg-[#121618] border border-[#1e2427] text-slate-200 focus:outline-none px-3 py-2 rounded-xl text-xs"
@@ -2112,7 +2112,7 @@ export const Dashboard: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.stockQuantity}</label>
-                  <input id="field_28" name="field_28"
+                  <input aria-label="Field 28" id="field_28" name="field_28"
                     type="number"
                     required
                     value={editInv.stock}
@@ -2122,7 +2122,7 @@ export const Dashboard: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.unitPrice} ({currency === 'USD' ? '$' : 'Rp'})</label>
-                  <input id="field_29" name="field_29"
+                  <input aria-label="Field 29" id="field_29" name="field_29"
                     type="number"
                     step="0.01"
                     required
@@ -2163,7 +2163,7 @@ export const Dashboard: React.FC = () => {
             <form onSubmit={handleUpdateCustomer} className="space-y-4">
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.clientFullName}</label>
-                <input id="field_30" name="field_30"
+                <input aria-label="Field 30" id="field_30" name="field_30"
                   type="text"
                   required
                   value={editCust.name}
@@ -2173,7 +2173,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.companyEntity}</label>
-                <input id="field_31" name="field_31"
+                <input aria-label="Field 31" id="field_31" name="field_31"
                   type="text"
                   value={editCust.company}
                   onChange={(e) => setEditCust({ ...editCust, company: e.target.value })}
@@ -2183,7 +2183,7 @@ export const Dashboard: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.emailAddress}</label>
-                  <input id="field_32" name="field_32"
+                  <input aria-label="Field 32" id="field_32" name="field_32"
                     type="email"
                     required
                     value={editCust.email}
@@ -2193,7 +2193,7 @@ export const Dashboard: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.phone}</label>
-                  <input id="field_33" name="field_33"
+                  <input aria-label="Field 33" id="field_33" name="field_33"
                     type="tel"
                     value={editCust.phone}
                     onChange={(e) => setEditCust({ ...editCust, phone: e.target.value })}
@@ -2203,7 +2203,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.accountStatus}</label>
-                <select id="field_34" name="field_34"
+                <select aria-label="Field 34" id="field_34" name="field_34"
                   value={editCust.status}
                   onChange={(e) => setEditCust({ ...editCust, status: e.target.value as Customer['status'] })}
                   className="w-full bg-[#121618] border border-[#1e2427] text-slate-200 focus:outline-none px-3 py-2 rounded-xl text-xs"
@@ -2243,7 +2243,7 @@ export const Dashboard: React.FC = () => {
             <form onSubmit={handleUpdateOrder} className="space-y-4">
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.orderId}</label>
-                <input id="field_35" name="field_35"
+                <input aria-label="Field 35" id="field_35" name="field_35"
                   type="text"
                   required
                   value={editOrder.order_id}
@@ -2253,7 +2253,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.customer}</label>
-                <input id="field_36" name="field_36"
+                <input aria-label="Field 36" id="field_36" name="field_36"
                   type="text"
                   required
                   value={editOrder.customer_name}
@@ -2264,7 +2264,7 @@ export const Dashboard: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.date}</label>
-                  <input id="field_37" name="field_37"
+                  <input aria-label="Field 37" id="field_37" name="field_37"
                     type="date"
                     required
                     value={editOrder.date}
@@ -2274,7 +2274,7 @@ export const Dashboard: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.status}</label>
-                  <select id="field_38" name="field_38"
+                  <select aria-label="Field 38" id="field_38" name="field_38"
                     value={editOrder.status}
                     onChange={(e) => setEditOrder({ ...editOrder, status: e.target.value as Order['status'] })}
                     className="w-full bg-[#121618] border border-[#1e2427] text-slate-200 focus:outline-none px-3 py-2 rounded-xl text-xs"
@@ -2289,7 +2289,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t.total} ({currency === 'USD' ? '$' : 'Rp'})</label>
-                <input id="field_39" name="field_39"
+                <input aria-label="Field 39" id="field_39" name="field_39"
                   type="number"
                   step="0.01"
                   required
