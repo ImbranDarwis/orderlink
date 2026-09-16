@@ -13,7 +13,12 @@ export default defineConfig(async ({ mode }) => {
     // Ignore error
   }
 
+  // Load .env files for local development
   const env = loadEnv(mode, process.cwd(), ['VITE_', 'NEXT_PUBLIC_']);
+
+  // Vite automatically handles VITE_ prefixed env vars natively.
+  // We only need to define process.env.* for compatibility with code that
+  // reads process.env directly (not import.meta.env).
   const processEnvDefines: Record<string, string> = {};
   for (const [key, value] of Object.entries(env)) {
     processEnvDefines[`process.env.${key}`] = JSON.stringify(value);
@@ -40,4 +45,4 @@ export default defineConfig(async ({ mode }) => {
       },
     },
   };
-})
+});
