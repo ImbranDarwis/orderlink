@@ -353,7 +353,7 @@ export const Login: React.FC = () => {
 
                 {/* Email */}
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  <label htmlFor="email" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                     Email Address
                   </label>
                   <div className="relative">
@@ -361,6 +361,8 @@ export const Login: React.FC = () => {
                       <Mail className="w-4 h-4" />
                     </span>
                     <input
+                      id="email"
+                      name="email"
                       type="email"
                       required
                       value={email}
@@ -373,7 +375,7 @@ export const Login: React.FC = () => {
 
                 {/* Password */}
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  <label htmlFor="password" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                     Password
                   </label>
                   <div className="relative">
@@ -381,6 +383,8 @@ export const Login: React.FC = () => {
                       <Lock className="w-4 h-4" />
                     </span>
                     <input
+                      id="password"
+                      name="password"
                       type={showPassword ? 'text' : 'password'}
                       required
                       value={password}
