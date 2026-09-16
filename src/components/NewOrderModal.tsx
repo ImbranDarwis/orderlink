@@ -117,10 +117,12 @@ export const NewOrderModal: React.FC<NewOrderModalProps> = ({ isOpen, onClose, o
           )}
 
           <div>
-            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label htmlFor="order-customer" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
               {language === 'EN' ? 'Customer Name' : 'Nama Pelanggan'}
             </label>
             <input
+              id="order-customer"
+              name="customer"
               type="text"
               required
               value={customer}
@@ -133,10 +135,12 @@ export const NewOrderModal: React.FC<NewOrderModalProps> = ({ isOpen, onClose, o
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label htmlFor="order-total" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
               {language === 'EN' ? 'Total Amount' : 'Jumlah Total'} ({currency === 'USD' ? 'USD $' : 'IDR Rp'})
             </label>
             <input
+              id="order-total"
+              name="total"
               type="number"
               step="0.01"
               required
@@ -150,10 +154,12 @@ export const NewOrderModal: React.FC<NewOrderModalProps> = ({ isOpen, onClose, o
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label htmlFor="order-status" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
               {language === 'EN' ? 'Order Status' : 'Status Pesanan'}
             </label>
             <select
+              id="order-status"
+              name="status"
               value={status}
               onChange={(e) => setStatus(e.target.value as Order['status'])}
               className={`w-full border text-xs px-4 py-2.5 rounded-xl transition-all focus:outline-none focus:border-[#10b981] cursor-pointer ${

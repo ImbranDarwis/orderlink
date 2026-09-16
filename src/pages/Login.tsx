@@ -469,7 +469,7 @@ export const Login: React.FC = () => {
               <form onSubmit={handleRegister} className="space-y-4">
                 {/* Full Name */}
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  <label htmlFor="reg-name" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                     Full Name
                   </label>
                   <div className="relative">
@@ -477,6 +477,8 @@ export const Login: React.FC = () => {
                       <User className="w-4 h-4" />
                     </span>
                     <input
+                      id="reg-name"
+                      name="name"
                       type="text"
                       required
                       value={fullName}
@@ -489,7 +491,7 @@ export const Login: React.FC = () => {
 
                 {/* Email */}
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  <label htmlFor="reg-email" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                     Email Address
                   </label>
                   <div className="relative">
@@ -497,6 +499,8 @@ export const Login: React.FC = () => {
                       <Mail className="w-4 h-4" />
                     </span>
                     <input
+                      id="reg-email"
+                      name="email"
                       type="email"
                       required
                       value={email}
@@ -510,28 +514,32 @@ export const Login: React.FC = () => {
                 {/* Password Grid */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    <label htmlFor="reg-password" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                       Password
                     </label>
                     <input
+                      id="reg-password"
+                      name="password"
                       type="password"
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-[#121618] border border-[#1e2427] text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#10b981] px-3.5 py-2 rounded-xl text-xs transition-all"
+                      className="w-full bg-[#121618] border border-[#1e2427] text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#10b981] px-4 py-2 rounded-xl text-xs transition-all"
                       placeholder="••••••••"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    <label htmlFor="reg-confirm" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                       Confirm
                     </label>
                     <input
+                      id="reg-confirm"
+                      name="confirm"
                       type="password"
                       required
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full bg-[#121618] border border-[#1e2427] text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#10b981] px-3.5 py-2 rounded-xl text-xs transition-all"
+                      className="w-full bg-[#121618] border border-[#1e2427] text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#10b981] px-4 py-2 rounded-xl text-xs transition-all"
                       placeholder="••••••••"
                     />
                   </div>
