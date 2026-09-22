@@ -659,7 +659,7 @@ export const Dashboard: React.FC = () => {
               if (card.key === 'total_orders' || card.key === 'active_customers') {
                 displayValue = numVal.toLocaleString(language === 'EN' ? 'en-US' : 'id-ID');
               } else {
-                displayValue = formatCurrency(numVal, currency);
+                displayValue = formatCurrency(numVal, currency, true);
               }
 
               return (
@@ -720,7 +720,7 @@ export const Dashboard: React.FC = () => {
                         <g key={`gridline-${i}`}>
                           <line x1={paddingX} y1={y} x2={chartWidth - paddingX} y2={y} stroke={isDark ? '#1e2427' : '#e2e8f0'} strokeWidth="0.75" strokeDasharray="3 3" />
                           <text x={paddingX - 10} y={y + 3} fill="#4b5563" fontSize="8" textAnchor="end" fontWeight="500">
-                            {formatCurrencyCompact(val, currency)}
+                            {formatCurrencyCompact(val, currency, true)}
                           </text>
                         </g>
                       );
@@ -744,7 +744,7 @@ export const Dashboard: React.FC = () => {
                         <g key={`tooltip-${d.id || index}`} className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                           <rect x={x - 45} y={y - 25} width="90" height="18" rx="4" fill="#1e2427" stroke="#10b981" strokeWidth="0.5" />
                           <text x={x} y={y - 13} fill="white" fontSize="8" textAnchor="middle" fontWeight="bold">
-                            {formatCurrency(d.value, currency)}
+                            {formatCurrency(d.value, currency, true)}
                           </text>
                         </g>
                         {index % (chartData.length > 10 ? 2 : 1) === 0 && (
@@ -804,7 +804,7 @@ export const Dashboard: React.FC = () => {
                         <td className="py-2.5 pr-6 font-semibold text-[#10b981] whitespace-nowrap">{order.order_id}</td>
                         <td className={`py-2.5 pr-6 font-medium ${themeText} whitespace-nowrap`}>{order.customer_name}</td>
                         <td className={`py-2.5 pr-6 ${themeTextMuted} whitespace-nowrap`}>{formatDisplayDate(order.date, language)}</td>
-                        <td className={`py-2.5 pr-16 text-right font-semibold ${themeText} whitespace-nowrap`}>{formatCurrency(order.total, currency)}</td>
+                        <td className={`py-2.5 pr-16 text-right font-semibold ${themeText} whitespace-nowrap`}>{formatCurrency(order.total, currency, true)}</td>
                         <td className="py-2.5 pr-6 whitespace-nowrap">{getStatusBadge(order.status)}</td>
                       </tr>
                     ))
@@ -884,7 +884,7 @@ export const Dashboard: React.FC = () => {
                       <td className="py-3 pr-6 font-semibold text-[#10b981] whitespace-nowrap">{order.order_id}</td>
                       <td className={`py-3 pr-6 font-medium ${themeText} whitespace-nowrap`}>{order.customer_name}</td>
                       <td className={`py-3 pr-6 ${themeTextMuted} whitespace-nowrap`}>{formatDisplayDate(order.date, language)}</td>
-                      <td className={`py-3 pr-16 text-right font-semibold ${themeText} whitespace-nowrap`}>{formatCurrency(order.total, currency)}</td>
+                      <td className={`py-3 pr-16 text-right font-semibold ${themeText} whitespace-nowrap`}>{formatCurrency(order.total, currency, true)}</td>
                       <td className="py-3 pr-6 whitespace-nowrap">{getStatusBadge(order.status)}</td>
                       <td className="py-3 text-right">
                         <button
@@ -1283,7 +1283,7 @@ export const Dashboard: React.FC = () => {
                   return (
                     <g key={`gridline-${i}`}>
                       <line x1={paddingX} y1={y} x2={chartWidth - paddingX} y2={y} stroke={isDark ? '#1e2427' : '#e2e8f0'} strokeWidth="0.5" strokeDasharray="3 3" />
-                      <text x={paddingX - 8} y={y + 3} fill="#4b5563" fontSize="8" textAnchor="end" fontWeight="500">{formatCurrencyCompact(getMaxY() * val, currency)}</text>
+                      <text x={paddingX - 8} y={y + 3} fill="#4b5563" fontSize="8" textAnchor="end" fontWeight="500">{formatCurrencyCompact(getMaxY() * val, currency, true)}</text>
                     </g>
                   );
                 })}
@@ -1314,7 +1314,7 @@ export const Dashboard: React.FC = () => {
                       <g className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                         <rect x={x - 45} y={y - 25} width="90" height="18" rx="4" fill="#1e2427" stroke="#10b981" strokeWidth="0.5" />
                         <text x={x} y={y - 13} fill="white" fontSize="8" textAnchor="middle" fontWeight="bold">
-                          {formatCurrency(d.value, currency)}
+                          {formatCurrency(d.value, currency, true)}
                         </text>
                       </g>
                     </g>
