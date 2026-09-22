@@ -11,8 +11,8 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
 
   // Form Inputs
-  const [email, setEmail] = useState('distributor@orderlink.io');
-  const [password, setPassword] = useState('demo123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [selectedRole, setSelectedRole] = useState<UserRole>('Admin');
@@ -28,10 +28,9 @@ export const Login: React.FC = () => {
     setError(null);
     setSuccess(null);
 
-    // Fast-path for demo password or when Supabase is not yet configured
-    if (!isSupabaseConfigured || password === 'demo123') {
-      loginDemo(selectedRole);
-      navigate('/');
+    if (!isSupabaseConfigured) {
+      setError('Supabase belum terhubung. Gunakan Login Demo atau konfigurasikan environment variables.');
+      setIsLoading(false);
       return;
     }
 
@@ -49,11 +48,6 @@ export const Login: React.FC = () => {
         navigate('/');
       }
     } catch (err: unknown) {
-      if (password === 'demo123') {
-        loginDemo(selectedRole);
-        navigate('/');
-        return;
-      }
       setError((err as Error).message || 'Invalid credentials. Please try again.');
     } finally {
       setIsLoading(false);
