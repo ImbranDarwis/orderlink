@@ -232,13 +232,66 @@ export const apiService = {
     return { ok: true };
   },
 
-  // Metrics
+  // Metrics — compute from real Supabase data when available
   async getMetrics(): Promise<MetricCard[]> {
+    if (isSupabaseConfigured) {
+      try {
+        // Fetch all orders to compute metrics
+        const { data: orders, error } = await supabase
+          .from('orders')
+          .select('total, status');
+
+        if (!error && orders) {
+          const totalOrders = orders.length;
+          const completedOrders = orders.filter(o => o.status === 'Completed' || o.status === 'Shipped');
+          const pendingOrders = orders.filter(o => o.status === 'Pending' || o.status === 'Processing').length;
+          const netRevenue = completedOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+          const avgOrderValue = totalOrders > 0
+            ? orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0) / totalOrders
+            : 0;
+
+          return [
+            { key: 'total_orders', label: 'Total Orders', value: String(totalOrders), change: '', type: 'green' },
+            { key: 'net_revenue', label: 'Net Revenue', value: String(netRevenue.toFixed(2)), change: '', type: 'green' },
+            { key: 'avg_order_value', label: 'Avg Order Value', value: String(avgOrderValue.toFixed(2)), change: '', type: 'gray' },
+            { key: 'pending_orders', label: 'Pending Orders', value: String(pendingOrders), change: '', type: 'gray' },
+          ];
+        }
+      } catch (err) {
+        console.warn('Supabase getMetrics failed, fallback to demo data:', err);
+      }
+    }
     return initialMetrics;
   },
 
-  // Chart
+  // Chart — compute from real Supabase data when available
   async getChartData(timeframe: string): Promise<ChartPoint[]> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data: orders, error } = await supabase
+          .from('orders')
+          .select('total, created_at')
+          .order('created_at', { ascending: true });
+
+        if (!error && orders && orders.length > 0) {
+          // Group orders by date and sum totals
+          const grouped: Record<string, number> = {};
+          for (const o of orders) {
+            const date = o.created_at ? new Date(o.created_at).toISOString().slice(0, 10) : 'Unknown';
+            grouped[date] = (grouped[date] || 0) + (Number(o.total) || 0);
+          }
+
+          return Object.entries(grouped).map(([date, value], i) => ({
+            id: i + 1,
+            date,
+            value,
+            timeframe,
+          }));
+        }
+      } catch (err) {
+        console.warn('Supabase getChartData failed, fallback to demo data:', err);
+      }
+    }
     return initialChartData.map((d) => ({ ...d, timeframe }));
   },
 

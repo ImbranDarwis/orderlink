@@ -60,7 +60,8 @@ export const NewOrderModal: React.FC<NewOrderModalProps> = ({ isOpen, onClose, o
       hours = hours ? hours : 12;
       const formattedDate = `${month} ${day}, ${year}, ${hours}:${minutes} ${ampm}`;
 
-      // Convert entered total to USD if active currency is IDR
+      // Store total in USD — if user entered IDR, convert to USD for storage
+      // Display layer (formatCurrency) handles USD→IDR conversion for viewing
       const finalTotalInUSD = currency === 'IDR' ? (totalVal / EXCHANGE_RATE) : totalVal;
 
       await apiService.createOrder({
