@@ -170,9 +170,25 @@ export const apiService = {
     if (isSupabaseConfigured) {
       try {
         const { data: userData } = await supabase.auth.getUser();
+        const userId = userData.user?.id;
+
+        // Determine ownership based on user role
+        const { data: profile } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', userId)
+          .single();
+
+        const ownerFields: Record<string, string | undefined> = {};
+        if (profile?.role === 'Distributor' || profile?.role === 'Admin') {
+          ownerFields.distributor_id = userId;
+        } else if (profile?.role === 'Retailer') {
+          ownerFields.retailer_id = userId;
+        }
+
         const { data, error } = await supabase
           .from('orders')
-          .insert([{ ...order, distributor_id: userData.user?.id }])
+          .insert([{ ...order, ...ownerFields }])
           .select()
           .single();
         if (!error && data) return data;
