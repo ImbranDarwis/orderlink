@@ -49,3 +49,4 @@ gitleaks.zip
 
 # Analysis output
 graphify-out/
+.env*
